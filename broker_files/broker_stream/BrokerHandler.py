@@ -187,7 +187,7 @@ class BrokerHandler(mh.RouterMessageHandler):
         worker_addr = data[0]
 
         if __debug__ == 1:
-            BrokerHandler.workers.ready(Worker(worker_addr, b'', b''))
+            BrokerHandler.workers.ready(Worker(worker_addr, b'', b'', current_milli_time()))
             self.send_task_to_worker()
             return
 
@@ -199,6 +199,21 @@ class BrokerHandler(mh.RouterMessageHandler):
             self.send_task_to_worker()
 
         return
+
+    def worker_ready(self, *data):
+        print("A worker is ready:{}".format(data))
+        worker_addr = data[0]
+
+        if __debug__ == 1:
+            BrokerHandler.workers.ready(Worker(worker_addr, b'', b'', current_milli_time()))
+            self.send_task_to_worker()
+            return
+
+        if DEBUG_MAX_WORKERS == 0 or len(BrokerHandler.workers.queue) < DEBUG_MAX_WORKERS:
+            BrokerHandler.workers.ready(Worker(worker_addr, b'', b'', current_milli_time()))
+            self.send_task_to_worker()
+        elif len(BrokerHandler.workers.queue) == DEBUG_MAX_WORKERS:
+            self.send_task_to_worker()
 
     '''
         SEC003: Test Functions 
@@ -231,5 +246,4 @@ class BrokerHandler(mh.RouterMessageHandler):
         t = Task(TEST_PING_TASK, self._backend_stream)
         t.add_payload(json.dumps(dict_req))
         return t
-
 
