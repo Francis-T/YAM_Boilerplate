@@ -14,7 +14,6 @@ class BrokerProcess(zp.ZmqProcess):
     a pong.
 
     """
-
     def __init__(self, bind_addr, backend_addr, subs_addr, identity=None):
         super().__init__()
 
@@ -28,6 +27,8 @@ class BrokerProcess(zp.ZmqProcess):
         self.frontend_stream = None
         self.backend_stream = None
         self.subscribe_stream = None
+
+        return
 
     def setup(self):
         """Sets up PyZMQ and creates all streams."""
@@ -58,12 +59,18 @@ class BrokerProcess(zp.ZmqProcess):
         # Consumes data in the form of ['topic', 'msg_type', 'identity, 'payloads'....]
         self.subscribe_stream.on_recv(brokerHandler)
 
+        return
+
     def run(self):
         """Sets up everything and starts the event loop."""
         self.setup()
         self.loop.start()
 
+        return
+
     def stop(self):
         """Stops the event loop."""
         print("Stopping.")
         self.loop.stop()
+
+        return

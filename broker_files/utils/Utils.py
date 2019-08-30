@@ -40,7 +40,7 @@ def split(a, n):
 
 # TODO: Im lazy.
 def delete_json_data(dir, filename, *keys):
-    pass
+    return
 
 def read_json_data(dir, filename, *keys):
     if not os.path.exists(os.path.join(os.getcwd(), dir)):
@@ -73,23 +73,26 @@ def write_json_data(dir, filename, dict):
     if os.stat(logs_path).st_size == 0:
         with open(logs_path, "w") as myfile:
             json.dump(dict, myfile)
-    else:
-        with open(logs_path, "r+") as jsonFile:
-            data = json.load(jsonFile)
 
-            for k, v in dict.items():
-                if k in data:
-                    tmp = data[k]
-                    data[k] = v
-                    jsonFile.seek(0)  # rewind
-                    json.dump(data, jsonFile)
-                    jsonFile.truncate()
-                else:
-                    # Or you could issue an error here...
-                    data[k] = v
-                    jsonFile.seek(0)  # rewind
-                    json.dump(data, jsonFile)
-                    jsonFile.truncate()
+        return True
+
+    with open(logs_path, "r+") as jsonFile:
+        data = json.load(jsonFile)
+
+        for k, v in dict.items():
+            if k in data:
+                tmp = data[k]
+                data[k] = v
+                jsonFile.seek(0)  # rewind
+                json.dump(data, jsonFile)
+                jsonFile.truncate()
+                continue
+
+            # Or you could issue an error here...
+            data[k] = v
+            jsonFile.seek(0)  # rewind
+            json.dump(data, jsonFile)
+            jsonFile.truncate()
 
     return True
 
@@ -103,7 +106,9 @@ def write_json_data(dir, filename, dict):
             date = datetime.datetime.fromtimestamp(millis/1000.0)
             central = date.astimezone(to_zone)
             central = central.strftime('%Y-%m-%d %H:%M:%S')
-        else:
-            date = datetime.datetime.fromtimestamp(millis/1000.0)
-            central = date.strftime('%Y-%m-%d %H:%M:%S')
+            return central
+
+        date = datetime.datetime.fromtimestamp(millis/1000.0)
+        central = date.strftime('%Y-%m-%d %H:%M:%S')
+
         return central

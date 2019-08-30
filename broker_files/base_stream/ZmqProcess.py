@@ -18,6 +18,7 @@ class ZmqProcess(multiprocessing.Process):
 
         self.loop = None
         """PyZMQ's event loop (:class:`~zmq.eventloop.ioloop.IOLoop`)."""
+        return
 
     def setup(self):
         """
@@ -26,6 +27,7 @@ class ZmqProcess(multiprocessing.Process):
         """
         self.context = zmq.Context()
         self.loop = ioloop.IOLoop.instance()
+        return
 
     def stream(self, sock_type, addr, bind, callback=None, subscribe=b'', identity=None):
         """

@@ -9,6 +9,7 @@ from utils.constants import *
 class RouterMessageHandler(object):
     def __init__(self, json_load=-1):
         self._json_load = json_load
+        return
 
     def __call__(self, msg):
         """
@@ -27,11 +28,19 @@ class RouterMessageHandler(object):
         if msg_type.startswith('_'):
             raise AttributeError('%s starts with an "_"' % msg_type)
 
-        getattr(self, msg_type)(*msg)
+        # Execute the function with the matching name
+        try:
+            getattr(self, msg_type)(*msg)
+        except AttributeError as e:
+            print("Attribute Errror: {}".format(e))
+            getattr(self, "error")(*msg)
+
+        return
 
 class DealerMessageHandler(object):
     def __init__(self, json_load=-1):
         self._json_load = json_load
+        return
 
     def __call__(self, msg):
         """
@@ -50,7 +59,14 @@ class DealerMessageHandler(object):
         if msg_type.startswith('_'):
             raise AttributeError('%s starts with an "_"' % msg_type)
 
-        getattr(self, msg_type)(*msg)
+        # Execute the function with the matching name
+        try:
+            getattr(self, msg_type)(*msg)
+        except AttributeError as e:
+            print("Attribute Errror: {}".format(e))
+            getattr(self, "error")(*msg)
+
+        return
 
 class RequestHandler(object):
     """
@@ -63,6 +79,7 @@ class RequestHandler(object):
 
     def __init__(self, json_load=-1):
         self._json_load = json_load
+        return
 
     def __call__(self, msg):
         """
@@ -81,11 +98,19 @@ class RequestHandler(object):
         if msg_type.startswith('_'):
             raise AttributeError('%s starts with an "_"' % msg_type)
 
-        getattr(self, msg_type)(*msg)
+        # Execute the function with the matching name
+        try:
+            getattr(self, msg_type)(*msg)
+        except AttributeError as e:
+            print("Attribute Errror: {}".format(e))
+            getattr(self, "error")(*msg)
+
+        return
 
 class PubMessageHandler(object):
     def __init__(self, json_load=-1):
         self._json_load = json_load
+        return
 
     def __call__(self, msg):
         """
@@ -103,15 +128,19 @@ class PubMessageHandler(object):
         if msg_type.startswith('_'):
             raise AttributeError('%s starts with an "_"' % msg_type)
 
+        # Execute the function with the matching name
         try:
             getattr(self, msg_type)(*msg)
         except AttributeError as e:
             print("Attribute Errror: {}".format(e))
             getattr(self, "error")(*msg)
+
+        return
 
 class MessageLogger(object):
     def __init__(self, json_load=-1):
         self._json_load = json_load
+        return
 
     def __call__(self, msg):
         """
@@ -129,8 +158,12 @@ class MessageLogger(object):
         if msg_type.startswith('_'):
             raise AttributeError('%s starts with an "_"' % msg_type)
 
+        # Execute the function with the matching name
         try:
             getattr(self, msg_type)(*msg)
         except AttributeError as e:
             print("Attribute Errror: {}".format(e))
             getattr(self, "error")(*msg)
+
+        return
+

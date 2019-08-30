@@ -12,6 +12,7 @@ class Task(object):
         self._socket = socket
         self._payload_count = 0
         self._status = Task.status_arr[0]
+        return
 
     # TODO: This send method should probably in a different place
     # Payload:
@@ -29,10 +30,16 @@ class Task(object):
     '''
     def send(self, address):
         payload_to_send = []
+
+        # Get the address, but check if we have to encode it first
+        encoded_address = None
         if isinstance(address, bytes):
-            payload_to_send.append(address)
+            encoded_address = address
         else:
-            payload_to_send.append(encode(address))
+            encoded_address = encode(address)
+
+        payload_to_send.append(encoded_address)
+
         print("Task.send: ", self._task_type)
         payload_to_send.append(encode(self._task_type))
         payload_to_send.append(encode(self._id))
@@ -41,29 +48,39 @@ class Task(object):
         payload_to_send.extend(self.payload)
         self._socket.send_multipart(payload_to_send)
 
+        return
+
     def add_payload(self, data):
         self._payload_count += 1
         if __debug__ == 0:
             print("Add_payload of type:{}".format(type(data)))
+
         if isinstance(data, np.ndarray):
             self.payload.append(b"ZippedPickleNdArray")
             self.payload.append(zip_and_pickle(data))
+
         elif isinstance(data, bytes):
             self.payload.append(b"Bytes")
             self.payload.append(data)
+
         elif isinstance(data, str):
             self.payload.append(b"String")
             self.payload.append(encode(data))
+
         else:
             self._payload_count -= 1
-            return
+
+        return
 
     def update_status(self, new_status):
         self._status = Task.status_arr[new_status]
+        return
 
     def deconstruct_payload(self):
-        pass
+        # TODO?
+        return
 
     def add_query_id(self, query_id):
         self._query_id = query_id
+        return
 

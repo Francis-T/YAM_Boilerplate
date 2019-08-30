@@ -10,6 +10,7 @@ class Worker(object):
         self.status = decode(status)
         self.last_alive = last_alive
         # self.last_alive = current_milli_time() + HEARTBEAT_INTERVAL * HEARTBEAT_LIVENESS
+        return
 
     def __repr__(self):
         ddict = {}
@@ -27,3 +28,5 @@ class Worker(object):
 
     def update_last_alive(self, time_in_millis):
         self.last_alive = time_in_millis
+        return
+

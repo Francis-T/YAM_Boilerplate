@@ -53,6 +53,7 @@ def ping():
                 elapsed = time.time() - start
                 print("Total time: {}".format(elapsed))
                 break
+    
     except zmq.ContextTerminated:
         return
 

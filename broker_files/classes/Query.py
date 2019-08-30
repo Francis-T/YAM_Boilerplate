@@ -22,23 +22,30 @@ class Query(object):
         # An array of tasks under this query
         self._tasks = []
 
+        return
+
     def add_task_id(self, task_id):
         self._generated_task_ids.append(task_id)
+        return
 
     def remove_task_id(self, task_id):
         self._generated_task_ids.remove(task_id)
+        return
 
     def add_task(self, task):
         self._tasks.append(task)
+        return
 
     def remove_task(self, task):
         self._tasks.remove(task)
+        return
 
     def task_id_count(self):
         return len(self._generated_task_ids)
 
     def update_status(self, new_status):
         self._status = Query.status_arr[new_status]
+        return
 
     def are_tasks_done(self):
         done = 0
@@ -48,11 +55,13 @@ class Query(object):
         
         if done == len(self._tasks):
             return True
+
         return False
 
     def send_response(self, response):
         print("Sending response:{}".format(response))
         self._stream.send_multipart([encode(self._client), encode(response)])
+        return
 
     def __str__(self):
         # return str(self._generated_task_ids)
@@ -60,4 +69,6 @@ class Query(object):
         # task_ids += ["{}:{}\n".format(i, t) for i, t in enumerate(self._generated_task_ids)]
         for i, t in enumerate(self._generated_task_ids):
             task_ids += "\t{}:{}\n".format(i + 1, t)
+
         return "Q_id: {} \n{}".format(self._id, task_ids)
+
